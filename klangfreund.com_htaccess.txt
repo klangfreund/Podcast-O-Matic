@@ -1,0 +1,50 @@
+- create web-user "fm4" (klangfreund.com/~fm4 )
+
+- create the following htaccess file (i.E. with Emacs. Don't save as htaccess.txt, encoding of "enter" will be wrong)
+   links: http://de.selfhtml.org/servercgi/server/htaccess.htm#verzeichnisschutz
+          http://www.potionfactory.com/blog/2006/02/20/password-protecting-podcast
+
+-----
+Options +Indexes
+AuthType Basic
+AuthName "aai caramba, FM4"
+AuthUserFile /home/fm4/public_html/.htusers
+Require valid-user
+-----
+
+- verify that the file is ok:
+  -good:
+  sam$ more htaccess 
+Options +Indexes
+AuthType Basic
+AuthName "aai caramba, FM4"
+AuthUserFile /home/fm4/public_html/.htusers
+Require valid-user
+
+  -bad:
+    $> more htaccess
+AuthType Basic^MAuthName "FM4"^MAuthUserFile /home/httpd/vhosts/klangfreund.com/web_users/fm4/.htusers^MRequire valid-user
+  )
+
+- create a htusers by adding the first user to it:
+    htpasswd -c htusers <username>
+   *******************************
+   every additional entry:       *
+    htpasswd htusers <username>  *
+   *******************************
+
+- upload via sftp
+   sftp fm4@klangfreund.com
+   sftp> cd public_html
+   sftp> put htusers .htusers
+   sftp> exit
+
+OR
+
+- upload via ftp in ascii-mode (can also be done with a graphical ftp-client like Cyberduck)
+   ftp klangfreund.com  (user: fm4)
+   ftp> ascii
+   ftp> cd public_html
+   ftp> put htusers .htusers
+   ftp> put htaccess .htaccess
+  link: http://www.techscribe.co.uk/ta/using_ftp.htm

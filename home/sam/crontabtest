@@ -1,0 +1,13 @@
+# -------------------
+# fm4 radio recording
+# -------------------
+
+# ---- TEMPORARY -----
+
+# ---- END TEMP ------
+
+# ----------------------------- monday --------------------------------------
+#min	hour	mday	month	wday	command
+
+# test
+20	8	*	*	*	/home/sam/scripts/record.sh crontest 0 0 20 >/dev/null

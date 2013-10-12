@@ -1,0 +1,6 @@
+# Ignore this folder
+klangfreund.com_htaccess/
+
+# Ignore files
+.DS_Store
+email_an_freunde.txt

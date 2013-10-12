@@ -1,0 +1,479 @@
+# date: 2008 07 14
+# last edit: 2013 08 04
+
+# System:
+#  PC Engines Alix.1D
+#   - internal CF card for the OS (voyage linux), read only
+#   - external USB memory stick to record music to, read and write
+#
+# Second computer to help and setup everything:
+#  Macbook Pro 2011, OSX 10.7.5
+
+
+1. Install Voyage Linux
+=======================
+
+idea
+----
+Boot the Alix.1D from a USB stick into ubuntu and put the voyage linux to the internal CF card.
+
+
+1.1 make a bootable voyage usb stick
+------------------------------------
+
+- download Voyage Linux to your mac from http://linux.voyage.hk/ .
+  (e.g. the file voyage-0.8.0.iso)
+- follow the steps described on http://www.ubuntu.com/download/ubuntu/download to put this on a USB stick:
+ - Download the desired file
+ - Open the Terminal (in /Applications/Utilities/ or query Terminal in Spotlight)
+ - Convert the .iso file to .img using the convert option of hdiutil (e.g., hdiutil convert -format UDRW -o ~/path/to/target.img ~/path/to/ubuntu.iso)
+   - Note: OS X tends to put the .dmg ending on the output file automatically.
+ - Run diskutil list to get the current list of devices
+ - Insert your flash media
+ - Run diskutil list again and determine the device node assigned to your flash media (e.g. /dev/disk2)
+ - Run diskutil unmountDisk /dev/diskN (replace N with the disk number from the last command; in the previous example, N would be 2)
+ - Execute sudo dd if=/path/to/downloaded.img of=/dev/rdiskN bs=1m (replace /path/to/downloaded.img with the path where the image file is located; for example, ./ubuntu.img or ./ubuntu.dmg).
+   - Using /dev/rdisk instead of /dev/disk might be faster.
+   - If you see the error dd: Invalid number '1m', you are using GNU dd. Use the same command but replace bs=1m with bs=1M.
+   - If you see the error dd: /dev/diskN: Resource busy, make sure the disk is not in use. Start the 'Disk Utility.app' and unmount (don't eject) the drive.
+ - Run diskutil eject /dev/diskN and remove your flash media when the command completes.
+
+
+1.2 Install Voyage Linux onto the cf card of the Alix.1D
+--------------------------------------------------------
+
+- Plug the the UBS stick and boot the alix and change the boot up
+  sequence in the BIOS such that the alix will boot from the stick.
+   # -> advanced BIOS Features
+   #  -> Hard Disk Boot Priority
+
+(source: http://linux.voyage.hk/content/getting-started-live-cd-v08x )
+- Login as root (password: voyage).
+- Create distribution directory for installation:	
+	# mkdir /tmp/root
+	# mount -o loop /live/image/live/filesystem.squashfs  /tmp/root
+	# cd /tmp/root
+- Make a mount point for the installation disk
+	# mkdir /tmp/cf
+- (This step is not needed since it will be done by the voyage.update script.)
+  Format target disk device
+	# /usr/local/sbin/format-cf.sh /dev/sda    	
+  This will create /dev/hda1 ext2 partition on /dev/hda disk device. 
+  ** Note that this operation is very dangerous since it will erase your disk! 
+     Make sure what you are doing and must do it right!
+- Start voyage.update installation script	
+	# /usr/local/sbin/voyage.update
+  Following the instruction to select /tmp/root as distribution directory, and 
+  /tmp/cf as mount point.  
+  choose: 1 Create new Voyage Linux disk
+  3 Select Target Disk:
+    # /dev/sda
+  4 Select Target Bootstrap Loader
+    # grub
+  5 Configure Target Console
+    # 2 - Console Interface
+  6 Partition and Create Filesystem
+    # 1 - Partition Flash Media and Create Filesystem
+    (This step might be redundant... but it doesn't hurt)
+
+- After the installation is complete, reboot.
+    # init 6
+- Go into the BIOS configuration again and revert the boot sequence
+  such that the cf card is the first boot up disk.
+
+
+2. Basic Setup
+==============
+
+- Login as root (pw: voyage)
+- Enable write access
+   # remountrw
+
+2.1 ssh
+-------
+on the alix:
+- To figure out the IP that was assigned by the DHCP server:
+   # ifconfig
+ -------------------------------
+| CONTINUE YOUR WORK ON THE MAC:|
+ -------------------------------
+- Connect to the alix:
+   # ssh <ip> -l root
+
+2.2.1 apt sources
+-----------------
+- Modify and add sources for apt
+   # vi /etc/apt/sources.list
+  It should look something like this:
+
+        # /etc/apt/sources.list
+
+        # original:
+        # deb http://ftp.jp.debian.org/debian/ squeeze main contrib non-free
+        # by sam:
+        deb http://ftp.ch.debian.org/debian/ squeeze main contrib non-free
+        deb http://security.debian.org/ squeeze/updates main contrib non-free
+
+        # by sam, to be able to download an mp3-encoder:
+        deb http://www.debian-multimedia.org squeeze main non-free
+
+2.2.2 apt update
+----------------
+- Make sure to get the latest and greatest
+   # apt-get update
+   # apt-get upgrade
+  (Just a quick reminder:
+   # apt-cache search <software you are looking for>
+  )
+
+2.3 vim
+-------
+- Install vim, such that a "real man" can work..
+   # apt-get install vim
+
+2.4 Set the timezone
+--------------------
+    # dpkg-reconfigure tzdata
+(Verify:
+    # date
+)
+
+2.5 Set a static IP, if desired (not done this time)
+-------------------------------
+    # vim /etc/network/interfaces
+
+        ...
+        auto eth0
+        #old:
+        # iface eth0 inet dhcp
+        #new:
+        iface eth0 inet static
+           address 192.168.0.2
+           netmask 255.255.255.0
+        ...
+        (evt. muss es sogar umfangreicher sein:
+        iface eth0 inet static
+           address 192.168.0.2
+           netmask 255.255.255.0
+           network 192.168.0.0
+           broadcast 192.168.1.255
+           gateway 192.168.0.1
+        ...)
+
+    # /etc/init.d/networking restart
+
+2.5 ftp server
+--------------
+    # apt-get install vsftpd
+    # vim /etc/vsftpd.conf
+
+
+        ...
+        local_enable=YES
+        ...
+        write_enable=YES
+        ...
+
+    # /etc/init.d/vsftpd restart
+(Verify (some steps later when the user account "sam" is installed) 
+ with e.g. Cyberduck and connect to sam@192.168.1.37)
+
+2.6 http server (not done this time)
+---------------
+    # apt-get install thttpd
+    # vim /etc/thttpd/thttpd.conf
+        dir=/home/sam/www
+    # mkdir /home/sam/www
+    # chown sam:users /home/sam/www
+    # /etc/init.d/thttpd restart
+
+
+3 External USB stick to write to
+================================
+
+3.1 format the usb stick
+------------------------
+- Shutdown, turn off, connect the usb stick and boot.
+- Login as root and
+    # remountrw
+- Check if the usb stick is visible
+    # fdisk -l
+- Partition the (correct) disk
+    # fdisk /dev/sda
+  Delete all partitions
+    # d
+  Add a new partition
+    # n
+    Primary
+    # p
+    # 1
+  Write table to disk and exit
+    # w
+- Format the partition
+    # mkfs.ext3 /dev/sda1
+  ext3 is like ext2 -j (with journaling)
+    
+    this output might be of interest:
+    This filesystem will be automatically checked every 24 mounts or
+    180 days, whichever comes first.  Use tune2fs -c or -i to override.
+
+3.2 mount the usb stick
+-----------------------
+- Create the mountpoint
+    # mkdir /rw2nddrv
+- Mount it when the system starts
+    # vim /etc/fstab
+
+        #/dev/hda1       /       ext2    defaults,noatime,rw     0       0
+        proc            /proc   proc    defaults                0       0
+        tmpfs                   /tmp    tmpfs   nosuid,nodev                    0               0
+        #tmpfs           /rw     tmpfs   defaults,size=32M        0       0
+        
+        # by sam:
+        /dev/sda1       /rw2nddrv       ext2    defaults,noatime,rw     0       0
+
+3.3 move some folders to the usb stick
+--------------------------------------
+- Reboot
+    # init 6
+- Verify that the folder "/rw2nddrv" is on /dev/sda1
+    # df
+
+3.3.1 home
+----------
+- Create the home folder on the usb stick
+    # mkdir /rw2nddrv/home
+- Remountrw
+    # remountrw
+- Remove the original home folder
+    # rmdir /home
+- Make a symlink to the home folder on the usb stick
+    # ln -s /rw2nddrv/home/ /home
+(- Verify
+    # cd /
+    # ls -l
+)
+
+3.3.2 crontab
+-------------
+    # cp -r /var/spool /rw2nddrv/
+    # cd /rw2nddrv
+- Relink the mail folder (before it pointed to the non-existent "../mail")
+    # rm mail
+    # ln -s /var/mail/ mail
+- Link the /var/spool
+    # rm -r /var/spool
+    # ln -s /rw2nddrv/spool/ /var/spool
+- Ensure that crontab will work
+    # cd /var/spool
+    # chown daemon:daemon cron
+    # cd cron
+    # chown root:crontab crontabs
+    # chmod g+w crontabs 
+    # chmod +t crontabs 
+  If there is a file named 'sam' inside /var/spool/cron/crontabs/, delete it.
+
+
+4. Set up "sam"
+===============
+
+4.1 Add the user "sam"
+----------------------
+    # adduser sam
+(Verify that the user was added:
+    # cat /etc/passwd | cut -d: -f1
+)
+
+4.2 Copy folders and files to sams home
+---------------------------------------
+- Use Cyberduck.app to connect to sam@192.168.1.37 and copy the files
+  from the "home/sam" folder next to this file to the home of sam.
+
+
+5. Tools used by the scripts
+============================
+
+5.1 Install bc
+--------------
+    # apt-get install bc
+
+5.2 Install wput
+----------------
+    # apt-get install wput
+
+5.3 Install ffmpeg
+------------------
+- Install a library such that ffmpeg will be able to encode to mp3
+(source: http://www.pyrosoft.co.uk/blog/2008/04/15/encoding-mp3-audio-with-ffmpeg-on-ubuntu-hardy/ )
+    # apt-get install libavcodec52
+- Install ffmpeg
+    # apt-get install ffmpeg
+(- Verify as sam
+    # ffmpeg -i http://mp3stream1.apasf.apa.at:8000 -ab 112k -t 20 test.mp3
+)
+
+5.4 trackservice tools 
+----------------------
+(http://thpinfo.com/2006/fm4trackservice/)
+    # apt-get install libwww-perl
+    # apt-get install libdatetime-perl
+
+
+6 ssh communication to the server
+=================================
+
+# SSH
+# ---
+# source: http://ask-leo.com/how_can_i_automate_an_sftp_transfer_between_two_servers.html
+#
+# On your local machine:
+# ^^^^^^^^^^^^^^^^^^^^^^
+#   vim ~/.ssh/id_rsa.pub
+# Copy the content (one line) to your copy buffer (Command-c)
+# If this file doesn't exist:
+#   ssh-keygen -t rsa
+#
+# On the remote machine (production server):
+# ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#
+#   (ssh fm4@klangfreund.com)
+#   mkdir ~/.ssh
+#   cd ~/.ssh
+#   vim authorized_keys
+# Paste the content of the copy buffer into this file (Command-v)
+#   :wq
+#   chmod 700 .
+#   chmod 600 authorized_keys
+# 
+# Now, tools like ssh, sftp and rsync will use this keys to
+# connect.
+
+
+7 crontab
+=========
+
+7.1 rights
+----------
+(as root)
+- See to which groups sam belongs
+    # groups sam
+        -> sam
+- NOT SURE IF THIS STEP IS REALLY NEEDED:
+  Add sam to the crontab group (also include all groups from the above output
+    # usermod -G sam,crontab sam
+- Reboot
+    # init 6
+
+
+7.2 set the crontab
+-------------------
+(as sam)
+- Copy a crontab file via ftp to sams home directory
+- Enable this crontab file by using the 'crontab <filename>' command.
+  Here an overview of the command 'crontab':
+    # crontab -l
+    list the current crontab
+
+    # crontab <filename>
+    adds the lines in the <filename> file to the crontab
+
+    # crontab -r
+    removes all lines in the crontab
+
+
+8 final touches
+===============
+
+8.1 backup rw2nddrv
+-------------------
+(as root)
+    # cd /
+    # mkdir rw2nddrv_backup
+    # cp -r rw2nddrv rw2nddrv_backup
+
+8.2 time
+--------
+(source: http://code.google.com/p/wfrog/wiki/InstallOn_Alix3D2_voyageLinux0_6_2#Clock_sync,
+http://www.pool.ntp.org/zone/ch )
+- The alix is drifting in time. To fix this:
+    # apt-get install adjtimex
+- install the ntpd daemon to syncronize the clock to an ntp time server.
+    # apt-get install ntp
+- In
+    # vim /etc/ntp.conf
+ - Change the driftfile location to
+    # /tmp/ntp.drift
+ - Add time servers
+        ...
+        server 0.ch.pool.ntp.org
+	    server 1.ch.pool.ntp.org
+	    server 2.ch.pool.ntp.org
+	    server 3.ch.pool.ntp.org
+        ...
+
+- from: http://choerbaert.org/wiki/voyage_on_alix#time_date
+When activating a network interface, ntpdate is automatically run. Because the board has multiple interfaces, ntpdate is also run multiple times. To prevent setting the date at the same time (which results in adding the offset several times to the current date and thus being somewhere far in the future), the ntpdate script has a lockfile. Unfortunately, this lockfile can't be created at bootup because of the partition being still mounted read-only. So one has to point it to a different place, e.g. to /tmp:
+    # vim /etc/network/if-up.d/ntpdate
+on line 33 change LOCKFILE to /tmp/ntpdate.lock
+
+- Start (or restart) the ntp daemon
+    # /etc/init.d/ntp start
+
+- Thats it! Wait some time to see the magic happen!
+  From http://doc.ntp.org/4.1.0/ntpd.htm -> Frequency Discipline:
+The ntpd behavior at startup depends on whether the frequency file, usually ntp.drift, exists. This file contains the latest estimate of clock frequency error. When the ntpd is started and the file does not exist, the ntpd enters a special mode designed to quickly adapt to the particular system clock oscillator time and frequency error. This takes approximately 15 minutes, after which the time and frequency are set to nominal values and the ntpd enters normal mode, where the time and frequency are continuously tracked relative to the server. After one hour the frequency file is created and the current frequency offset written to it. When the ntpd is started and the file does exist, the ntpd frequency is initialized from the file and enters normal mode immediately. After that the current frequency offset is written to the file at hourly intervals.
+
+
+Make ntp launch at system start
+-------------------------------
+
+    # apt-get install sysv-rc-conf
+
+Check if ntp launches at startup:
+    
+    # sysv-rc-conf --list ntp
+
+Adjust if neccessary
+
+    # sysv-rc-conf ntp on
+    # sysv-rc-conf --level <set_a_level> ntp on
+
+Source: http://www.linuxhomenetworking.com/wiki/index.php/Quick_HOWTO_:_Ch06_:_Installing_Linux_Software#Managing_Daemons
+
+
+
+
+OR
+
+As root:
+    # crontab -e
+and add
+    46 09  *   *   *     ntpdate swisstime.ethz.ch > /home/sam/logs/rootCrontab.log
+(where the log file has been created as user 'sam' before)
+
+
+8.2 remountro
+-------------
+- Remount the cf card as read only
+    # remountro
+
+8.3 test
+--------
+(as sam)
+    # ./scripts/record.sh test 0 0 30
+
+
+
+9 tips and tricks
+=================
+
+time
+----
+(this only works if ntpd is not running)
+ntpdate swisstime.ethz.ch
+
+
+
+
+
+Is it working? Grab a drink and party!

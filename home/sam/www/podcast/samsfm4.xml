@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
+ 
+<channel>
+<title>aai caramba, FM4, recorded by sam</title>
+<link>http://www.klangfreund.com</link>
+<language>en-us</language>
+<copyright>this is a private podcast for personal use by Samuel Gaehwiler only</copyright>
+<itunes:subtitle>radio fm4 recorded by Samuel Gaehwiler</itunes:subtitle>
+<itunes:author>Samuel Gaehwiler</itunes:author>
+<itunes:summary>fm4 radioshows to enjoy</itunes:summary>
+<description>fm4 radioshows to enjoy</description>
+<itunes:owner>
+ <itunes:name>Samuel Gaehwiler</itunes:name>
+ <itunes:email>sg@klangfreund.com</itunes:email>
+</itunes:owner>
+<itunes:image href="http://www.klangfreund.com/~fm4/images/fm4.png" />
+
+
+</channel>
+</rss>

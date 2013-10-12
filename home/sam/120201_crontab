@@ -1,0 +1,159 @@
+# ------------------- fm4 radio recording -------------------
+
+# ---- TEMPORARY -----
+#min	hour    mday	month	wday	command
+#saturday
+#05	    21      24      12      *       /home/sam/scripts/record.sh weihnachten_ohne_freunde 0 49 50 >/dev/null
+# sunday
+#05      0       25      12      *       /home/sam/scripts/record.sh weihnachten_mit_einem_freund 0 54 50 >/dev/null
+#00      5       25      12      *       /home/sam/scripts/record.sh die_stille_nacht 0 59 50 >/dev/null
+#00      15      25      12      *       /home/sam/scripts/record.sh best_of_fm4_acoustic_sessions 0 59 50 >/dev/null
+#00      16      25      12      *       /home/sam/scripts/record.sh best_of_fm4_acoustic_sessions 0 59 50 >/dev/null
+## monday
+#00	    10	    26	    12	    *   	/home/sam/scripts/record.sh sunny_side_up 0 59 50 >/dev/null
+#00	    11	    26	    12	    *   	/home/sam/scripts/record.sh sunny_side_up 0 59 50 >/dev/null
+#00	    12	    26	    12	    *   	/home/sam/scripts/record.sh sunny_side_up 0 59 50 >/dev/null
+#00      15      26      12      *       /home/sam/scripts/record.sh best_of_fm4_acoustic_sessions 0 59 50 >/dev/null
+#00      16      26      12      *       /home/sam/scripts/record.sh best_of_fm4_acoustic_sessions 0 59 50 >/dev/null
+## saturday
+#00	    15	    31	    12	    *	    /home/sam/scripts/record.sh fm4_jahrescharts 0 59 50 >/dev/null
+#00	    16	    31	    12	    *	    /home/sam/scripts/record.sh fm4_jahrescharts 0 59 50 >/dev/null
+
+#05	    21	    31	    12	    *	    /home/sam/scripts/record.sh 2011on45 0 49 50 >/dev/null
+#05      0       1       1       *       /home/sam/scripts/record.sh 2011on45 0 54 50 >/dev/null
+#00      5       1       1       *       /home/sam/scripts/record.sh 2011on45 0 59 50 >/dev/null
+#00      13      1       1       *       /home/sam/scripts/record.sh doppelzimmer_spezial 0 59 50 >/dev/null
+#00      14      1       1       *       /home/sam/scripts/record.sh doppelzimmer_spezial 0 59 50 >/dev/null
+
+# ---- END TEMP ------
+
+
+# ----------------------------- mo - fr -------------------------------------
+#min	hour	mday	month	wday	command
+
+# 1400-1459_unlimited
+00	14	*	*	1-5	/home/sam/scripts/record.sh unlimited 0 59 50 >/dev/null
+
+# ----------------------------- monday --------------------------------------
+#min	hour	mday	month	wday	command
+
+# 0000-0105_liquid_radio
+00	0	*	*	1	/home/sam/scripts/record.sh liquid_radio 1 5 0 >/dev/null
+
+# REMOVE ALL MP3s
+00	6	*	*	1	rm /home/sam/www/podcast/audio/*
+
+# 2155-2358_heartbeat
+55	21	*	*	1	/home/sam/scripts/record.sh heartbeat 2 3 50 >/dev/null
+
+# 2359-0105_fivas_ponyhof
+59  23  *   *   1   /home/sam/scripts/record.sh fivas_ponyhof 1 6 0 >/dev/null
+
+# ----------------------------- tuesday -------------------------------------
+#min	hour	mday	month	wday	command
+
+
+# 0255-0510_solidsteel
+55	2	*	*	2	/home/sam/scripts/record.sh solidsteel 2 15 0 >/dev/null
+
+# 2155-2359_high_spirits
+55	21	*	*	2	/home/sam/scripts/record.sh high_spirits 2 4 40 >/dev/null
+
+# ----------------------------- wednesday -----------------------------------
+#min	hour	mday	month	wday	command
+
+# 0000-0120_chez_hermes
+00	0	*	*	3	/home/sam/scripts/record.sh chez_hermes 1 20 0 >/dev/null
+
+# 0255-0510_soulsearching
+#55	2	*	*	3	/home/sam/scripts/record.sh soulsearching 2 15 0 >/dev/null
+
+# ----------------------------- thursday ------------------------------------
+#min	hour	mday	month	wday	command
+
+# 0255-0505_gilles_petersons_world_wide
+55	2	*	*	4	/home/sam/scripts/record.sh gilles_petersons_world_wide 2 9 50 >/dev/null
+
+# 0505-0600_sleepless
+05	5	*	*	4	/home/sam/scripts/record.sh sleepless 0 55 0 >/dev/null
+
+# 1900-1959_homebase
+00	19	*	*	4	/home/sam/scripts/record.sh homebase 0 59 50 >/dev/null
+# 2000-2059_homebase
+00	20	*	*	4	/home/sam/scripts/record.sh homebase 0 59 50 >/dev/null
+# 2100-2155_homebase
+00	21	*	*	4	/home/sam/scripts/record.sh homebase 0 54 50 >/dev/null
+
+
+# 2155-0005_tribevibes
+55	21	*	*	4	/home/sam/scripts/record.sh tribevibes 2 10 0 >/dev/null
+
+# ----------------------------- friday --------------------------------------
+#min	hour	mday	month	wday	command
+
+# 2014-2131_salon_hermes
+14	20	*	*	5	/home/sam/scripts/record.sh salon_hermes 1 17 0 >/dev/null
+
+# ----------------------------- saturday ------------------------------------
+#min	hour	mday	month	wday	command
+
+# 1700-1759_charts
+00	17	*	*	6	/home/sam/scripts/record.sh charts 0 59 50 >/dev/null
+# 1800-1859_charts
+00	18	*	*	6	/home/sam/scripts/record.sh charts 0 59 50 >/dev/null
+
+# 1900-2000_davidecks
+00	19	*	*	6	/home/sam/scripts/record.sh davidecks 0 59 40 >/dev/null
+# 2000-2105_davidecks
+00	20  *   *   6   /home/sam/scripts/record.sh davidecks 1 4 50 >/dev/null
+
+# 2155-2259_swound_sound
+55	21	*	*	6	/home/sam/scripts/record.sh swound_sound 1 4 40 >/dev/null
+# 2300-0005_swound_sound
+00  23  *   *   6   /home/sam/scripts/record.sh swound_sound 1 4 40 >/dev/null
+
+
+# ----------------------------- sunday --------------------------------------
+#min	hour	mday	month	wday	command
+# digital_confusion
+00      1       *       *       0     /home/sam/scripts/record.sh digital_confusion 0 59 50 >/dev/null
+00      2       *       *       0     /home/sam/scripts/record.sh digital_confusion 0 59 50 >/dev/null
+00      3       *       *       0     /home/sam/scripts/record.sh digital_confusion 0 59 50 >/dev/null
+00      4       *       *       0     /home/sam/scripts/record.sh digital_confusion 0 59 50 >/dev/null
+
+
+# 0600-0659_morning_show
+00	6	*	*	0	/home/sam/scripts/record.sh morning_show 0 59 50 >/dev/null
+# 0700-0759_morning_show
+00	7	*	*	0	/home/sam/scripts/record.sh morning_show 0 59 50 >/dev/null
+# 0800-0859_morning_show
+00	8	*	*	0	/home/sam/scripts/record.sh morning_show 0 59 50 >/dev/null
+# 0900-0959_morning_show
+00	9	*	*	0	/home/sam/scripts/record.sh morning_show 0 59 50 >/dev/null
+
+# 1000-1059_sunny_side_up
+00	10	*	*	0	/home/sam/scripts/record.sh sunny_side_up 0 59 50 >/dev/null
+# 1100-1159_sunny_side_up
+00	11	*	*	0	/home/sam/scripts/record.sh sunny_side_up 0 59 50 >/dev/null
+# 1200-1259_sunny_side_up
+00	12	*	*	0	/home/sam/scripts/record.sh sunny_side_up 0 59 50 >/dev/null
+
+# 1600-1659_gaestezimmer
+00	16	*	*	0	/home/sam/scripts/record.sh gaestezimmer 0 59 50 >/dev/null
+
+# 2055-2159_im_sumpf
+55	20	*	*	0	/home/sam/scripts/record.sh im_sumpf 1 4 50 >/dev/null
+# 2200-2259_im_sumpf
+00  22  *   *   0   /home/sam/scripts/record.sh im_sumpf 0 59 50 >/dev/null
+# 2300-2359_graue_lagune
+00	23	*	*	0	/home/sam/scripts/record.sh graue_lagune 0 59 50 >/dev/null
+
+# ------------------- fm4 trackservice tools -------------------
+#min	hour	mday	month	wday	command
+
+# update trackservice txt-files every 10 minutes
+*/10 *	*	*	*	/home/sam/scripts/trackservice/trackservice.cron >/dev/null
+
+# upload trackservice txt-files every day at 0:05
+05	0	*   *   *   /home/sam/scripts/upload_trackservice.sh >/dev/null
+
