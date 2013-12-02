@@ -1,11 +1,10 @@
-stream2podcast
+Podcast-O-Matic
 ==============
 
 A collection of shell scripts to record radio shows from an
 online stream and generate a podcast.
 
-It's a personal project and as far as I know only used by myself. Nevertheless
-it's working like a charm for years know.
+It's a side project, but it working like a charm for years know.
 
 At first - in 2007 when online radio streams were not that common - the system
 recorded the signal from an analog radio receiver.
