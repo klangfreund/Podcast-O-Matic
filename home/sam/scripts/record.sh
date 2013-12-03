@@ -40,7 +40,7 @@ filename=$(date +\%y\%m\%d_\%H\%M)-$stop_hour${stop_minute}_${description}
 #end filenamestuff ----------------------------------------------------------------------
 
 # record the fm4 mp3 stream:
-ffmpeg -i http://mp3stream1.apasf.apa.at:8000 -ab 112k -t $secondsTotal $audiopath$filename.mp3
+ffmpeg -i http://mp3stream1.apasf.apa.at:8000 -acodec copy -t $secondsTotal $audiopath$filename.mp3
 
 # add the mp3 to the podcast
 /home/sam/scripts/add_to_podcast.sh $filename $secondsTotal &
