@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# fm4ts-search
+# Search for Songs in local trackservice cache
+# Thomas Perl <thp at thpinfo com>, 2006-11-26
+
+(`dirname $0`/fm4ts-list | grep -i "$*") || echo 'Nothing found.'
+

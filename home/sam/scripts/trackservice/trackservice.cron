@@ -1,0 +1,44 @@
+#!/usr/bin/perl
+
+# trackservice.cron
+# Radio FM4 Trackservice Archival Cronjob
+# Thomas Perl <thp at thpinfo com> 2006-11-26
+
+use strict;
+use warnings;
+
+use LWP::UserAgent;
+use DateTime;
+
+my $url = 'http://fm4.orf.at/trackservicepopup';
+my $filename = glob('~/').'www/trackservice/'.DateTime->now->strftime('%Y-%m-%d').'.txt';
+
+my $ua = new LWP::UserAgent;
+$ua->env_proxy;
+my $response = $ua->get( $url);
+
+
+if( $response->is_success) {
+    my $webtracks = $response->content;
+    $webtracks =~ s/<[^<]*>/ /g; # remove html tags
+    $webtracks =~ s/^\s*(.*?)\s*$/$1/g; # remove leading and trailing whitespace
+    $webtracks =~ s/[ ]+/ /g; # convert multiple spaces to one single space
+
+    my @tracks = ();
+    for( grep( /^\d{2}:\d{2}: .+ \| .+$/, split( /\n/, $webtracks))) {
+        my ($time, $title, $artist) = /(\d{2}:\d{2}): (.*) \| (.*)$/;
+        $artist =~ s/^\s*(.*?)\s*$/$1/g; # remove leading and trailing whitespace
+        push @tracks, "$time: $title | $artist";
+    }
+
+    # write new track info
+    if( open OUTPUT, '>>', $filename) {
+        for( keys %{{ map { $_ => 1 } @tracks }}) {
+            if( !($_ eq '1')) {
+                print OUTPUT "$_\n";
+            }
+        }
+        close OUTPUT;
+    }
+}
+

@@ -1,0 +1,16 @@
+#!/bin/bash
+#
+# fm4ts -- Shell Skript zum anzeigen der aktuellen FM4 Trackservice Liste
+# 28.01.2004 Thomas Perl <perl.thomas@aon.at>
+#
+
+echo ""
+echo "              FM4 Trackservice"
+echo "         - == === ======== === == -"
+echo ""
+echo -en "Getting playlist...\r"
+wget -q -O - http://fm4.orf.at/trackservicepopup | \
+sed -e 's/<[^<]*>/ /g' -e 's/^[ \t]*//g' -e 's/  / /g' | \
+grep '^[0-9]'
+echo ""
+

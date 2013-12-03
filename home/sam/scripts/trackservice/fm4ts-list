@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# fm4ts-list
+# List Artists and Songs from local trackservice cache
+# Thomas Perl <thp at thpinfo com>, 2006-11-26
+
+cat ~/www/trackservice/* | \
+  sed -e 's/^[[:digit:]]*:[[:digit:]]*: //g' -e 's/\(.*\) | \(.*\)/\2 - \1/g' | \
+  sort | \
+  uniq
+

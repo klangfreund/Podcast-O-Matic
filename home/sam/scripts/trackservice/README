@@ -1,0 +1,48 @@
+
+  fm4ts - commandline fm4 trackservice tools
+  ------------------------------------------
+  (c) 2004, 2006 thp <thp at thpinfo com>
+
+  http://thpinfo.com/2006/fm4trackservice/
+
+  Debian/Ubuntu users will need:
+     libwww-perl
+     libdatetime-perl
+     wget
+
+  CRONJOB
+  =======
+  To set up the FM4 Trackservice Cronjob, 
+  install the "trackservice.cron" Perl script
+  somewhere in your home directory and add it
+  to your crontab (crontab -e):
+
+  */10 * * * * /home/thp/bin/trackservice.cron
+
+  This would run the script every ten minutes.
+
+  Don't forget to create the working directory 
+  for the cronjob:   mkdir ~/.trackservice
+
+
+  COMMANDLINE UTILITIES
+  =====================
+  
+  1) fm4ts
+  This script loads the current tracklist from 
+  the FM4 Webserver and displays it on your 
+  terminal.
+
+  2) fm4ts-list
+  This script reads the downloaded tracklist 
+  cache and generates a list of "Artist - Song"
+  lines that are then written to your terminal.
+
+  3) fm4ts-search
+  This script is a simple wrapper around the 
+  fm4ts-list utility and grep to search for 
+  specific songs or artists. Results are sent 
+  to stdout.
+
+                      -- thp, 2006-11-26
+
